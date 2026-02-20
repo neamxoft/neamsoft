@@ -1,0 +1,246 @@
+/* neamsoft Design System v5.0 - AgentFlow Inspiration */
+
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  /* Agentflow Palette */
+  --af-navy: #091026;
+  --af-blue: #004aad;
+  --af-accent: #00a8e8;
+  --af-slate: #6e7991;
+  --af-border: #eff1f6;
+  --af-bg-light: #ffffff;
+  --af-bg-soft: #f8fafc;
+
+  /* Geometry */
+  --af-radius: 40px;
+  --af-container: 1136px;
+}
+
+.dark {
+  --af-bg-light: #0f172a;
+  --af-bg-soft: #1e293b;
+  --af-border: #334155;
+  --af-navy: #f1f5f9;
+  --af-slate: #94a3b8;
+}
+
+.dark .badge {
+  background: rgba(147, 197, 253, 0.15);
+  color: #93c5fd;
+}
+
+.dark .section-label {
+  color: #93c5fd;
+}
+
+/* Reset & Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+ul {
+  list-style: none;
+}
+
+body {
+  font-family: 'Figtree', sans-serif;
+  background-color: var(--af-bg-light);
+  color: var(--af-navy);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease;
+}
+
+/* Layout */
+.container-af {
+  max-width: var(--af-container);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.section-padding {
+  padding: 120px 0;
+}
+
+/* Components */
+.af-card {
+  background: var(--af-bg-light);
+  border: 1px solid var(--af-border);
+  border-radius: var(--af-radius);
+  padding: 48px;
+  box-shadow: 0 1px 1px rgba(11, 20, 55, 0.05), 0 4px 4px rgba(153, 190, 255, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.af-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(11, 20, 55, 0.1);
+}
+
+.af-btn-primary {
+  background-color: var(--af-blue);
+  color: white;
+  padding: 14px 28px;
+  border-radius: 100px;
+  font-weight: 600;
+  font-family: inherit;
+  font-size: 1rem;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.af-btn-primary:hover {
+  background-color: var(--af-navy);
+  transform: translateY(-2px);
+}
+
+.af-btn-secondary {
+  background-color: transparent;
+  color: var(--af-navy);
+  border: 1px solid var(--af-border);
+  padding: 14px 28px;
+  border-radius: 100px;
+  font-weight: 600;
+  font-family: inherit;
+  font-size: 1rem;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.af-btn-secondary:hover {
+  background-color: var(--af-bg-soft);
+  border-color: var(--af-navy);
+}
+
+/* Typography */
+h1 {
+  font-size: clamp(2.5rem, 6vw, 3.75rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+}
+
+h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 20px;
+}
+
+h3 {
+  font-weight: 700;
+}
+
+.text-sub {
+  color: var(--af-slate);
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+/* Grid System */
+.af-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.af-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 1024px) {
+
+  .af-grid-3,
+  .af-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .section-padding {
+    padding: 80px 0;
+  }
+}
+
+/* Form Styles */
+.af-input {
+  width: 100%;
+  background-color: var(--af-bg-soft);
+  border: 1px solid var(--af-border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--af-navy);
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.af-input:focus {
+  border-color: var(--af-blue);
+  background-color: var(--af-bg-light);
+  box-shadow: 0 0 0 4px rgba(0, 74, 173, 0.1);
+}
+
+.af-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--af-slate);
+}
+
+/* Utility Classes */
+.bg-soft {
+  background-color: var(--af-bg-soft);
+}
+
+.bg-navy {
+  background-color: #091026;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hero Centering */
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero-btns {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+@media (max-width: 768px) {
+  .hero-btns {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .af-btn-primary,
+  .af-btn-secondary {
+    width: 100%;
+    text-align: center;
+  }
+}
