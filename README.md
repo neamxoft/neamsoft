@@ -60,9 +60,11 @@ Para que GitHub Actions logre realizar la compilación y conectarse a AWS, debes
 | Nombre | Descripción |
 |---|---|
 | `SENDMAIL_URL` | URL real del API Gateway de AWS que procesa el correo (ej: `https://xyz...execute-api.us-east-1.amazonaws.com/prod/sendmail`). |
-| `AWS_ACCESS_KEY_ID` | La llave pública de tu usuario IAM con permisos para administrar S3 y CloudFront. |
-| `AWS_SECRET_ACCESS_KEY` | La llave privada secreta de tu usuario IAM. |
+| `AWS_ROLE_ARN` | **Seguridad Avanzada (OIDC):** El ARN del Rol IAM configurado en AWS para ser asumido por GitHub Actions (ej: `arn:aws:iam::123456789012:role/GitHubActionsRole`). Esto evita crear o almacenar llaves secretas de largo plazo. |
 | `CLOUDFRONT_DIST_ID` | El identificador de tu distribución CDN de CloudFront (ej: `E2XYZABCDE123`). |
+
+> 💡 **Nota sobre AWS OIDC:**
+> Para usar  `AWS_ROLE_ARN`, necesitas crear un "Identity Provider" (Proveedor de Identidad) de tipo OpenID Connect en IAM de AWS con la URL `token.actions.githubusercontent.com`, y luego crear un Rol de IAM en AWS. A este Rol se le debe asociar la política de permisos necesaria (S3 y CloudFront) y establecer como Entidad de Confianza al Identity Provider, apuntando hacia este repositorio de GitHub (ej: `repo:neamsoft/neamsoft-website:ref:refs/heads/main`).
 
 #### 🌐 Variables (Variables de Repositorio)
 | Nombre | Descripción |
@@ -78,7 +80,7 @@ _Una vez configurados, el despliegue a **AWS** dejará de requerir intervención
 Se ejecuta bajo cualquier `push` y Pull Request hacia ramas diferentes a `main`.
 * Descarga el código y la caché de Node.
 * Instala dependencias limpias.
-* Genera dinámicamente el `environment.ts` inyectando tu secreo temporal.
+* Genera dinámicamente el `environment.ts` inyectando tu secreto temporal.
 * Valida que la aplicación `npx ng build` compila correctamente sin errores de TypeScript ni romperse.
 
 ### Flujo CD (Despliegue Continuo) - `cd.yml`
