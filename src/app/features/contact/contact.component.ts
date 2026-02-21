@@ -24,7 +24,7 @@ import { EmailService } from '../../core/services/email.service';
                 <span class="info-icon">✉️</span>
                 <div>
                   <h4>Email</h4>
-                  <p class="text-sub">contacto [at] neamsoft [dot] com [dot] mx</p>
+                  <p class="text-sub">contacto@neamsoft.com.mx</p>
                 </div>
               </div>
 

@@ -174,7 +174,7 @@ import { EmailService } from '../../core/services/email.service';
                   <div class="contact-info-icon">✉️</div>
                   <div>
                     <h4 style="color: #fff; font-weight: 700; margin-bottom: 4px;">Escríbenos</h4>
-                    <p style="color: #94a3b8;">contacto&#64;neamsoft.com.mx</p>
+                    <p style="color: #94a3b8;">contacto@neamsoft.com.mx</p>
                   </div>
                 </div>
 
