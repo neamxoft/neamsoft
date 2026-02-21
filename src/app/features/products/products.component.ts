@@ -8,7 +8,7 @@ import { RouterModule } from '@angular/router';
   imports: [CommonModule, RouterModule],
   template: `
     <main class="products-page">
-      <section class="section-padding">
+      <section>
         <div class="container-af products-header">
           <span class="badge">Ingeniería Custom</span>
           <h1>Soluciones de Ingeniería de Élite</h1>
@@ -167,7 +167,7 @@ import { RouterModule } from '@angular/router';
 
     .products-page {
       min-height: 100vh;
-      padding-top: 20px;
+      padding-top: 80px;
       background: var(--af-bg-soft);
     }
 

@@ -1,0 +1,14 @@
+// ==================================================
+// Variables de Entorno - neamsoft (PLANTILLA)
+// ==================================================
+// Copia este archivo como environment.ts y ajusta los valores.
+// NO subas environment.ts con datos reales al repositorio.
+// En CI/CD (GitHub Actions), usa sed para reemplazar los
+// placeholders antes del build:
+//   sed -i "s|SENDMAIL_URL_PLACEHOLDER|${{ secrets.SENDMAIL_URL }}|g" src/environments/environment.prod.ts
+// ==================================================
+
+export const environment = {
+    production: false,
+    sendmailUrl: 'SENDMAIL_URL_PLACEHOLDER'
+};
