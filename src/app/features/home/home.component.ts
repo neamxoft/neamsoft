@@ -1,4 +1,4 @@
-import { Component, inject, signal, ViewEncapsulation, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, inject, signal, ViewEncapsulation, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -623,6 +623,8 @@ import { EmailService } from '../../core/services/email.service';
 export class HomeComponent implements AfterViewInit {
   themeService = inject(ThemeService);
   emailService = inject(EmailService);
+  private cdr = inject(ChangeDetectorRef);
+  private ngZone = inject(NgZone);
 
   @ViewChild('editorArea') editorAreaRef!: ElementRef<HTMLDivElement>;
 
@@ -700,18 +702,24 @@ export class HomeComponent implements AfterViewInit {
       message: htmlMessage
     }).subscribe({
       next: () => {
-        this.emailExito = '✅ Mensaje enviado correctamente. Nos pondremos en contacto pronto.';
-        this.form = { nombre: '', email: '', asunto: '', mensaje: '' };
-        if (this.editorAreaRef) {
-          this.editorAreaRef.nativeElement.innerHTML = '';
-        }
-        this.enviando = false;
-        this.mostrarPreview = false;
+        this.ngZone.run(() => {
+          this.emailExito = '✅ Mensaje enviado correctamente. Nos pondremos en contacto pronto.';
+          this.form = { nombre: '', email: '', asunto: '', mensaje: '' };
+          if (this.editorAreaRef) {
+            this.editorAreaRef.nativeElement.innerHTML = '';
+          }
+          this.enviando = false;
+          this.mostrarPreview = false;
+          this.cdr.detectChanges();
+        });
       },
       error: (err) => {
-        this.emailError = '❌ Error al enviar el mensaje. Intenta nuevamente o escríbenos directamente a contacto@neamsoft.com.mx';
-        this.enviando = false;
-        console.error('Error en EmailService:', err);
+        this.ngZone.run(() => {
+          this.emailError = '❌ Error al enviar el mensaje. Intenta nuevamente o escríbenos directamente a contacto@neamsoft.com.mx';
+          this.enviando = false;
+          this.cdr.detectChanges();
+          console.error('Error en EmailService:', err);
+        });
       }
     });
   }

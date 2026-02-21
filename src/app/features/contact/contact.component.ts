@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, inject, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EmailService } from '../../core/services/email.service';
@@ -372,6 +372,8 @@ import { EmailService } from '../../core/services/email.service';
 })
 export class ContactComponent implements AfterViewInit {
   emailService = inject(EmailService);
+  private cdr = inject(ChangeDetectorRef);
+  private ngZone = inject(NgZone);
 
   @ViewChild('editorArea') editorAreaRef!: ElementRef<HTMLDivElement>;
 
@@ -443,17 +445,23 @@ export class ContactComponent implements AfterViewInit {
       message: htmlMessage
     }).subscribe({
       next: () => {
-        this.emailExito = '✅ Mensaje enviado. Nos pondremos en contacto pronto.';
-        this.formData = { name: '', email: '', subject: '', message: '' };
-        if (this.editorAreaRef) {
-          this.editorAreaRef.nativeElement.innerHTML = '';
-        }
-        this.enviando = false;
-        this.mostrarPreview = false;
+        this.ngZone.run(() => {
+          this.emailExito = '✅ Mensaje enviado. Nos pondremos en contacto pronto.';
+          this.formData = { name: '', email: '', subject: '', message: '' };
+          if (this.editorAreaRef) {
+            this.editorAreaRef.nativeElement.innerHTML = '';
+          }
+          this.enviando = false;
+          this.mostrarPreview = false;
+          this.cdr.detectChanges();
+        });
       },
       error: () => {
-        this.emailError = '❌ Error al enviar. Intenta nuevamente.';
-        this.enviando = false;
+        this.ngZone.run(() => {
+          this.emailError = '❌ Error al enviar. Intenta nuevamente.';
+          this.enviando = false;
+          this.cdr.detectChanges();
+        });
       }
     });
   }
