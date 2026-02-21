@@ -29,6 +29,14 @@ import { EmailService } from '../../core/services/email.service';
               </div>
 
               <div class="info-item">
+                <span class="info-icon">📞</span>
+                <div>
+                  <h4>Teléfono</h4>
+                  <p class="text-sub">(81) 1917 2261</p>
+                </div>
+              </div>
+
+              <div class="info-item">
                 <span class="info-icon">📍</span>
                 <div>
                   <h4>Ubicación</h4>

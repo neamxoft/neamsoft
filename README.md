@@ -1,59 +1,89 @@
-# Neamsoft
+# neamsoft — Website Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.4.
+Este repositorio contiene la plataforma pública de **neamsoft**, construida con **Angular 18**. La aplicación incluye secciones corporativas, información de consultoría y un sistema de contacto que utiliza AWS SES y AWS Lambda (arquitectura Serverless).
 
-## Development server
+## 🚀 Inicio Rápido Local
 
-To start a local development server, run:
+### Requisitos Previos
 
-```bash
-ng serve
-```
+- **Node.js**: v18.x o superior
+- **Angular CLI**: v18.x (`npm install -g @angular/cli`)
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### Instalación y Ejecución
 
-## Code scaffolding
+1. Clona el repositorio e instala las dependencias:
+   ```bash
+   npm install
+   ```
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+2. Configura las variables de entorno locales:
+   Copia el archivo de ejemplo para crear la configuración local.
+   ```bash
+   cp src/environments/environment.ts.example src/environments/environment.ts
+   cp src/environments/environment.ts.example src/environments/environment.prod.ts
+   ```
+   Abre `src/environments/environment.ts` y reemplaza `SENDMAIL_URL_PLACEHOLDER` con la URL de tu API Gateway en AWS.
 
-```bash
-ng generate component component-name
-```
+3. Inicia el servidor de desarrollo local:
+   ```bash
+   ng serve
+   ```
+   La aplicación estará disponible en `http://localhost:4200/`.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
 
-```bash
-ng generate --help
-```
+## 🏗️ Build Manual para Producción
 
-## Building
+Para compilar el proyecto manualmente para producción y subirlo o probarlo localmente:
 
-To build the project run:
+1. Asegúrate de tener configurado tu `environment.prod.ts` correctamente con los endpoints en producción y `production: true`.
+2. Ejecuta el siguiente comando para generar la versión de producción estática:
+   ```bash
+   npx ng build --configuration production
+   ```
+3. Los artefactos estáticos (HTML, JS, CSS) se encontrarán generados en la ruta interna `./dist/neamsoft/browser/`. Esta carpeta contiene exactamente lo que se debe subir a S3.
 
-```bash
-ng build
-```
+---
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## 🛠️ GitHub Actions y AWS (CI / CD Integrado)
 
-## Running unit tests
+El proyecto cuenta con flujos de trabajo (*workflows*) de GitHub Actions para CI (compilación y validación en ramas secundarias) y CD (despliegue automático a S3 y CloudFront al empujar a `main`).
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+### Variables y Secretos a Configurar en GitHub
 
-```bash
-ng test
-```
+El archivo de configuración ambiental `src/environments/environment.ts` **no se sube al repositorio** por motivos de seguridad (está excluido vía `.gitignore`).  
+En lugar de eso, en el servidor de CI/CD se genera el entorno dinámicamente y de forma segura al compilar, a partir del archivo de ejemplo y utilizando tus *GitHub Secrets* y *Variables*.
 
-## Running end-to-end tests
+Para que GitHub Actions logre realizar la compilación y conectarse a AWS, debes ir en tu repositorio a **Settings > Secrets and variables > Actions** y configurar:
 
-For end-to-end (e2e) testing, run:
+#### 🔐 Secrets (Secretos de Repositorio)
+| Nombre | Descripción |
+|---|---|
+| `SENDMAIL_URL` | URL real del API Gateway de AWS que procesa el correo (ej: `https://xyz...execute-api.us-east-1.amazonaws.com/prod/sendmail`). |
+| `AWS_ACCESS_KEY_ID` | La llave pública de tu usuario IAM con permisos para administrar S3 y CloudFront. |
+| `AWS_SECRET_ACCESS_KEY` | La llave privada secreta de tu usuario IAM. |
+| `CLOUDFRONT_DIST_ID` | El identificador de tu distribución CDN de CloudFront (ej: `E2XYZABCDE123`). |
 
-```bash
-ng e2e
-```
+#### 🌐 Variables (Variables de Repositorio)
+| Nombre | Descripción |
+|---|---|
+| `AWS_REGION` | Región donde está alojada tu infraestructura cloud en AWS (ej: `us-east-1`). |
+| `S3_BUCKET_NAME` | El nombre del Bucket S3 configurado como alojamiento estático (ej: `neamsoft-website-bucket`). |
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+_Una vez configurados, el despliegue a **AWS** dejará de requerir intervención humana, y el CloudFront vaciará su caché de forma transparente para los usuarios._
 
-## Additional Resources
+---
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### Flujo CI (Integración Continua) - `ci.yml`
+Se ejecuta bajo cualquier `push` y Pull Request hacia ramas diferentes a `main`.
+* Descarga el código y la caché de Node.
+* Instala dependencias limpias.
+* Genera dinámicamente el `environment.ts` inyectando tu secreo temporal.
+* Valida que la aplicación `npx ng build` compila correctamente sin errores de TypeScript ni romperse.
+
+### Flujo CD (Despliegue Continuo) - `cd.yml`
+Se ejecuta únicamente ante un `push` a la rama productiva **`main`**.
+* Genera el `environment.prod.ts` con producción activada (producción verdadera).
+* Compila todo a código estático final (`dist/neamsoft/browser/`).
+* **Deploy a S3**: Usa `aws s3 sync` con tu SDK para reemplazar los archivos viejos con los nuevos mediante la flag `--delete`.
+* **Invalidación de CloudFront**: Limpia la caché perimetral usando `create-invalidation` en toda la ruta `/*` para forzar que los navegadores consuman la versión más reciente en S3.

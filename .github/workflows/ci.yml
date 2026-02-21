@@ -1,0 +1,41 @@
+name: Build Neamsoft Website CI
+
+on:
+  push:
+    branches:
+      - 'nangeles*'
+      - 'mgallegos*'
+      - 'feature/*'
+      - 'bugfix/*'
+      - 'hotfix/*'
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Generate Environment File
+        run: |
+          mkdir -p src/environments
+          cp src/environments/environment.ts.example src/environments/environment.ts
+          sed -i "s|SENDMAIL_URL_PLACEHOLDER|${{ secrets.SENDMAIL_URL }}|g" src/environments/environment.ts
+          cp src/environments/environment.ts src/environments/environment.prod.ts
+
+      - name: Build Application
+        run: npx ng build --configuration production

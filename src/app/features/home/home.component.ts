@@ -179,6 +179,14 @@ import { EmailService } from '../../core/services/email.service';
                 </div>
 
                 <div class="contact-info-item">
+                  <div class="contact-info-icon">📞</div>
+                  <div>
+                    <h4 style="color: #fff; font-weight: 700; margin-bottom: 4px;">Teléfono</h4>
+                    <p style="color: #94a3b8;">(81) 1917 2261</p>
+                  </div>
+                </div>
+
+                <div class="contact-info-item">
                   <div class="contact-info-icon">📍</div>
                   <div>
                     <h4 style="color: #fff; font-weight: 700; margin-bottom: 4px;">Ubicación</h4>
