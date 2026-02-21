@@ -261,10 +261,18 @@ import { EmailService } from '../../core/services/email.service';
                 <!-- Vista previa del email HTML -->
                 <div *ngIf="form.nombre && form.email && form.mensaje" class="preview-toggle">
                   <button type="button" class="preview-btn" (click)="mostrarPreview = !mostrarPreview">
-                    {{ mostrarPreview ? '🔽 Ocultar' : '👁️ Vista previa' }} del correo HTML
+                    {{ mostrarPreview ? '🔽 Ocultar' : '👁️ Vista previa' }} HTML
                   </button>
                 </div>
-                <div *ngIf="mostrarPreview && form.nombre" class="preview-container" [innerHTML]="getPreviewHtml()"></div>
+                <div *ngIf="mostrarPreview && form.nombre" class="code-preview">
+                  <div class="code-titlebar">
+                    <span class="code-dot code-dot-red"></span>
+                    <span class="code-dot code-dot-yellow"></span>
+                    <span class="code-dot code-dot-green"></span>
+                    <span class="code-filename">email-preview.html</span>
+                  </div>
+                  <pre class="code-body"><code>{{ getPreviewHtml() }}</code></pre>
+                </div>
 
                 <!-- Errores -->
                 <p *ngIf="emailError" class="form-error">{{ emailError }}</p>
@@ -449,7 +457,7 @@ import { EmailService } from '../../core/services/email.service';
       gap: 16px;
     }
 
-    /* Preview */
+    /* Code Preview (VS Code style) */
     .preview-toggle { text-align: right; }
     .preview-btn {
       background: none;
@@ -462,13 +470,47 @@ import { EmailService } from '../../core/services/email.service';
       font-family: inherit;
     }
     .preview-btn:hover { background: var(--af-bg-soft); }
-    .preview-container {
-      border: 1px solid var(--af-border);
+    .code-preview {
       border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #2d2d3f;
+      background: #1e1e2e;
+    }
+    .code-titlebar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 14px;
+      background: #181825;
+      border-bottom: 1px solid #2d2d3f;
+    }
+    .code-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+    .code-dot-red { background: #ff5f57; }
+    .code-dot-yellow { background: #febc2e; }
+    .code-dot-green { background: #28c840; }
+    .code-filename {
+      margin-left: 8px;
+      font-size: 0.7rem;
+      color: #6c7086;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    }
+    .code-body {
       padding: 16px;
-      background: #f8fafc;
-      max-height: 300px;
+      margin: 0;
+      max-height: 280px;
       overflow-y: auto;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.75rem;
+      line-height: 1.7;
+      color: #cdd6f4;
+      white-space: pre-wrap;
+      word-break: break-all;
+      tab-size: 2;
+    }
+    .code-body code {
+      color: #cdd6f4;
     }
 
     .form-error {
@@ -655,10 +697,7 @@ export class HomeComponent implements AfterViewInit {
     );
 
     this.emailService.sendMail({
-      to_email: this.form.email,
-      subject: this.form.asunto || 'Contacto desde neamsoft.com.mx',
-      message: htmlMessage,
-      isHTML: true
+      message: htmlMessage
     }).subscribe({
       next: () => {
         this.emailExito = '✅ Mensaje enviado correctamente. Nos pondremos en contacto pronto.';

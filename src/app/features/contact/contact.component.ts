@@ -13,7 +13,7 @@ import { EmailService } from '../../core/services/email.service';
         <div class="contact-grid">
 
           <div>
-            <span class="section-label">Contacto</span>
+            <span class="badge">Contacto</span>
             <h1>Iniciemos la Transformación</h1>
             <p class="text-sub" style="margin-bottom: 40px; font-size: 1.1rem;">
               Nuestros expertos están listos para analizar sus desafíos técnicos y proponer soluciones de ingeniería de alto impacto.
@@ -53,7 +53,7 @@ import { EmailService } from '../../core/services/email.service';
                 <input type="text" name="subject" [(ngModel)]="formData.subject" class="af-input" placeholder="Migración Cloud">
               </div>
               <div class="form-group">
-                <label class="af-label">Mensaje</label>
+                <label class="af-label">Mensaje o Requerimientos</label>
                 <div class="editor-container">
                   <div class="editor-toolbar">
                     <div class="toolbar-group">
@@ -106,6 +106,22 @@ import { EmailService } from '../../core/services/email.service';
                 </div>
               </div>
 
+              <!-- Vista previa HTML estilo VS Code -->
+              <div *ngIf="formData.name && formData.email && formData.message" class="preview-toggle">
+                <button type="button" class="preview-btn" (click)="mostrarPreview = !mostrarPreview">
+                  {{ mostrarPreview ? '🔽 Ocultar' : '👁️ Vista previa' }} HTML
+                </button>
+              </div>
+              <div *ngIf="mostrarPreview && formData.name" class="code-preview">
+                <div class="code-titlebar">
+                  <span class="code-dot code-dot-red"></span>
+                  <span class="code-dot code-dot-yellow"></span>
+                  <span class="code-dot code-dot-green"></span>
+                  <span class="code-filename">email-preview.html</span>
+                </div>
+                <pre class="code-body"><code>{{ getPreviewHtml() }}</code></pre>
+              </div>
+
               <p *ngIf="emailError" class="msg-error">{{ emailError }}</p>
               <p *ngIf="emailExito" class="msg-success">{{ emailExito }}</p>
 
@@ -122,20 +138,23 @@ import { EmailService } from '../../core/services/email.service';
   styles: [`
     :host { display: block; }
 
-    .contact-page {
-      min-height: 100vh;
-      padding: 120px 0 80px;
-      background: var(--af-bg-soft);
-    }
-
-    .section-label {
-      display: block;
+    .badge {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 100px;
+      background: rgba(0, 74, 173, 0.08);
       color: #004aad;
+      font-size: 0.75rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      font-size: 0.8rem;
-      margin-bottom: 12px;
+      margin-bottom: 24px;
+    }
+
+    .contact-page {
+      min-height: 100vh;
+      padding: 80px 0 80px;
+      background: var(--af-bg-soft);
     }
 
     .contact-grid {
@@ -272,6 +291,62 @@ import { EmailService } from '../../core/services/email.service';
     .editor-area ul, .editor-area ol { padding-left: 24px; margin: 8px 0; }
     .editor-area li { margin-bottom: 4px; }
 
+    /* Code Preview (VS Code style) */
+    .preview-toggle { text-align: right; }
+    .preview-btn {
+      background: none;
+      border: 1px solid var(--af-border);
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      color: var(--af-slate);
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .preview-btn:hover { background: var(--af-bg-soft); }
+    .code-preview {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #2d2d3f;
+      background: #1e1e2e;
+    }
+    .code-titlebar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 14px;
+      background: #181825;
+      border-bottom: 1px solid #2d2d3f;
+    }
+    .code-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+    .code-dot-red { background: #ff5f57; }
+    .code-dot-yellow { background: #febc2e; }
+    .code-dot-green { background: #28c840; }
+    .code-filename {
+      margin-left: 8px;
+      font-size: 0.7rem;
+      color: #6c7086;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    }
+    .code-body {
+      padding: 16px;
+      margin: 0;
+      max-height: 280px;
+      overflow-y: auto;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.75rem;
+      line-height: 1.7;
+      color: #cdd6f4;
+      white-space: pre-wrap;
+      word-break: break-all;
+      tab-size: 2;
+    }
+    .code-body code {
+      color: #cdd6f4;
+    }
+
     .msg-error {
       color: #ef4444;
       font-size: 0.85rem;
@@ -310,6 +385,7 @@ export class ContactComponent implements AfterViewInit {
   enviando = false;
   emailError = '';
   emailExito = '';
+  mostrarPreview = false;
 
   ngAfterViewInit() { }
 
@@ -326,6 +402,15 @@ export class ContactComponent implements AfterViewInit {
     event.preventDefault();
     const text = event.clipboardData?.getData('text/plain') || '';
     document.execCommand('insertText', false, text);
+  }
+
+  getPreviewHtml(): string {
+    return this.emailService.buildHtmlMessage(
+      this.formData.name,
+      this.formData.email,
+      this.formData.subject || 'Sin asunto',
+      this.formData.message
+    );
   }
 
   enviarCorreo() {
@@ -355,10 +440,7 @@ export class ContactComponent implements AfterViewInit {
     );
 
     this.emailService.sendMail({
-      to_email: this.formData.email,
-      subject: this.formData.subject || 'Contacto desde neamsoft.com.mx',
-      message: htmlMessage,
-      isHTML: true
+      message: htmlMessage
     }).subscribe({
       next: () => {
         this.emailExito = '✅ Mensaje enviado. Nos pondremos en contacto pronto.';
@@ -367,6 +449,7 @@ export class ContactComponent implements AfterViewInit {
           this.editorAreaRef.nativeElement.innerHTML = '';
         }
         this.enviando = false;
+        this.mostrarPreview = false;
       },
       error: () => {
         this.emailError = '❌ Error al enviar. Intenta nuevamente.';

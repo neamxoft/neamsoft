@@ -1,32 +1,31 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, timeout } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface SendMailPayload {
-    to_email: string;
-    subject: string;
-    message: string;
-    isHTML: boolean;
+  message: string;
 }
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class EmailService {
-    private http = inject(HttpClient);
-    private apiUrl = environment.sendmailUrl;
+  private http = inject(HttpClient);
+  private apiUrl = environment.sendmailUrl;
 
-    sendMail(payload: SendMailPayload): Observable<any> {
-        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-        return this.http.post(this.apiUrl, payload, { headers });
-    }
+  sendMail(payload: SendMailPayload): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post(this.apiUrl, payload, { headers }).pipe(
+      timeout(15000) // 15 segundos max
+    );
+  }
 
-    /**
-     * Construye un mensaje HTML profesional con la plantilla de neamsoft
-     */
-    buildHtmlMessage(nombre: string, email: string, asunto: string, mensaje: string): string {
-        return `
+  /**
+   * Construye un mensaje HTML profesional con la plantilla de neamsoft
+   */
+  buildHtmlMessage(nombre: string, email: string, asunto: string, mensaje: string): string {
+    return `
       <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background: #f8fafc; border-radius: 16px; overflow: hidden;">
         <div style="background: #091026; padding: 32px; text-align: center;">
           <h1 style="color: #ffffff; margin: 0; font-size: 24px; letter-spacing: -0.02em;">neamsoft</h1>
@@ -51,7 +50,7 @@ export class EmailService {
           </table>
           <div style="margin-top: 24px; padding: 20px; background: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0;">
             <p style="color: #64748b; font-size: 12px; margin: 0 0 8px; text-transform: uppercase; letter-spacing: 0.05em;">Mensaje</p>
-            <p style="color: #091026; margin: 0; line-height: 1.6; white-space: pre-wrap;">${mensaje}</p>
+            <div style="color: #091026; margin: 0; line-height: 1.6;">${mensaje}</div>
           </div>
         </div>
         <div style="padding: 24px 32px; background: #f1f5f9; text-align: center;">
@@ -59,13 +58,13 @@ export class EmailService {
         </div>
       </div>
     `;
-    }
+  }
 
-    /**
-     * Valida formato de email
-     */
-    isValidEmail(email: string): boolean {
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return emailRegex.test(email);
-    }
+  /**
+   * Valida formato de email
+   */
+  isValidEmail(email: string): boolean {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  }
 }
