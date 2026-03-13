@@ -10,7 +10,7 @@ import { ThemeService } from '../../../core/services/theme.service';
   template: `
     <nav class="af-nav">
       <div class="nav-inner">
-        <a routerLink="/" class="nav-logo" (click)="closeMenu()">neamsoft</a>
+        <a routerLink="/" class="nav-logo" (click)="closeMenu()">&#123; neamsoft &#125;</a>
 
         <div class="nav-links">
           <a routerLink="/">Inicio</a>

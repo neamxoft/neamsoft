@@ -11,7 +11,7 @@ import { RouterModule } from '@angular/router';
       <div class="container-af">
         <div class="footer-grid">
           <div class="footer-brand">
-            <span class="footer-logo">neamsoft</span>
+            <span class="footer-logo">&#123; neamsoft &#125;</span>
             <p class="footer-desc">
               Consultoría de ingeniería de software de élite. Transformamos desafíos complejos en soluciones resilientes y escalables de clase mundial.
             </p>
