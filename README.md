@@ -28,6 +28,20 @@ Este repositorio contiene la plataforma pública de **neamsoft**, construida con
    ```bash
    ng serve
    ```
+   A. Si deseas que el servidor sea accesible desde la red local, puedes usar el flag `--host 0.0.0.0`:
+   ```bash
+   ng serve --host 0.0.0.0
+   ```
+   B. Si deseas cambiar el puerto por defecto (4200), puedes usar el flag `--port`:
+   ```bash
+   ng serve --port 4200
+   ```
+   C. Si deseas cambiar el puerto por defecto (4200), puedes usar el flag `--port`:
+   
+   ```bash
+   ng serve --host 0.0.0.0 --port 4200
+   ```
+   
    La aplicación estará disponible en `http://localhost:4200/`.
 
 ---
