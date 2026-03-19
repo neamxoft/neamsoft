@@ -10,7 +10,7 @@ import { ThemeService } from '../../../core/services/theme.service';
   template: `
     <nav class="af-nav">
       <div class="nav-inner">
-        <a routerLink="/" class="nav-logo" (click)="closeMenu()">&#123; neamsoft &#125;</a>
+        <a routerLink="/" class="nav-logo" style="font-family: 'AristotelicaDisplayDemiBold', sans-serif;" (click)="closeMenu()">&#123; neamsoft &#125;</a>
 
         <div class="nav-links">
           <a routerLink="/">Inicio</a>
@@ -104,7 +104,7 @@ import { ThemeService } from '../../../core/services/theme.service';
     }
 
     .nav-logo {
-      font-size: 1.5rem;
+      font-size: 2rem;
       font-weight: 800;
       letter-spacing: -0.04em;
       color: var(--af-navy);
