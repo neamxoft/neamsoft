@@ -1,6 +1,6 @@
 {
   "name": "neamsoft",
-  "short_name": "neamsoft",
+  "short_name": "{ neamsoft }",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
