@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, NgZone } from '@angular/core';
+import { Component, inject, ChangeDetectorRef, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EmailService } from '../../core/services/email.service';
@@ -8,445 +8,221 @@ import { EmailService } from '../../core/services/email.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <section class="contact-page">
-      <div class="container-af">
-        <div class="contact-grid">
+    <main class="contact-page-wrapper">
+      <section class="section-padding contact-section">
+        <div class="container-af">
+          <div class="contact-layout">
+            <!-- Columna Izquierda: Información Corporativa -->
+            <div class="contact-info-col">
+              <span class="badge badge-blue">Contacto Directo</span>
+              <h1 class="contact-heading">¿Listo para iniciar tu próximo proyecto de software?</h1>
+              <p class="contact-sub">
+                Conversa directamente con nuestros ingenieros senior. Analizaremos tu requerimiento y te presentaremos una propuesta arquitectónica y económica sin compromiso.
+              </p>
 
-          <div>
-            <span class="badge">Contacto</span>
-            <h1>Iniciemos la Transformación</h1>
-            <p class="text-sub" style="margin-bottom: 40px; font-size: 1.1rem;">
-              Nuestros expertos están listos para analizar sus desafíos técnicos y proponer soluciones de ingeniería de alto impacto.
-            </p>
-
-            <div class="info-list">
-              <div class="info-item">
-                <span class="info-icon">✉️</span>
-                <div>
-                  <h4>Email</h4>
-                  <p class="text-sub">contacto@neamsoft.com.mx</p>
+              <div class="contact-cards-group">
+                <div class="contact-detail-card">
+                  <div class="contact-detail-icon">✉️</div>
+                  <div>
+                    <span class="detail-label">Correo Electrónico</span>
+                    <a href="mailto:contacto@neamsoft.com.mx" class="detail-link">contacto&#64;neamsoft.com.mx</a>
+                  </div>
                 </div>
-              </div>
 
-              <div class="info-item">
-                <span class="info-icon">📞</span>
-                <div>
-                  <h4>Teléfono</h4>
-                  <p class="text-sub">(81) 1917 2261</p>
+                <div class="contact-detail-card">
+                  <div class="contact-detail-icon">📞</div>
+                  <div>
+                    <span class="detail-label">Teléfono Directo</span>
+                    <a href="tel:+528119172261" class="detail-link">(81) 1917 2261</a>
+                  </div>
                 </div>
-              </div>
 
-              <div class="info-item">
-                <span class="info-icon">📍</span>
-                <div>
-                  <h4>Ubicación</h4>
-                  <p class="text-sub">Monterrey, MX</p>
+                <div class="contact-detail-card">
+                  <div class="contact-detail-icon">📍</div>
+                  <div>
+                    <span class="detail-label">Sede Corporativa</span>
+                    <span class="detail-text">Monterrey, Nuevo León, México</span>
+                  </div>
+                </div>
+
+                <div class="contact-detail-card">
+                  <div class="contact-detail-icon">⏱️</div>
+                  <div>
+                    <span class="detail-label">Tiempo de Respuesta</span>
+                    <span class="detail-text">Menos de 24 horas hábiles garantizadas</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div class="af-card form-card">
-            <form (ngSubmit)="enviarCorreo()" class="form-body">
-              <div class="form-group">
-                <label class="af-label">Nombre Completo</label>
-                <input type="text" name="name" [(ngModel)]="formData.name" class="af-input" placeholder="Juan Pérez" required>
-              </div>
-              <div class="form-group">
-                <label class="af-label">Correo Corporativo</label>
-                <input type="email" name="email" [(ngModel)]="formData.email" class="af-input" placeholder="juan.perez&#64;empresa.com" required>
-              </div>
-              <div class="form-group">
-                <label class="af-label">Asunto</label>
-                <input type="text" name="subject" [(ngModel)]="formData.subject" class="af-input" placeholder="Migración Cloud">
-              </div>
-              <div class="form-group">
-                <label class="af-label">Mensaje o Requerimientos</label>
-                <div class="editor-container">
-                  <div class="editor-toolbar">
-                    <div class="toolbar-group">
-                      <button type="button" class="toolbar-btn" title="Negrita" (click)="execCmd('bold')">
-                        <strong>B</strong>
-                      </button>
-                      <button type="button" class="toolbar-btn" title="Cursiva" (click)="execCmd('italic')">
-                        <em>I</em>
-                      </button>
-                      <button type="button" class="toolbar-btn" title="Subrayado" (click)="execCmd('underline')">
-                        <span style="text-decoration: underline;">U</span>
-                      </button>
+            <!-- Columna Derecha: Tarjeta de Formulario Profesional -->
+            <div class="contact-form-col">
+              <div class="af-card contact-form-card">
+                <div class="form-card-header">
+                  <h3>Envíanos un Mensaje</h3>
+                  <p class="text-sub">Completa los datos y te responderemos a la brevedad.</p>
+                </div>
+
+                <form (ngSubmit)="enviarCorreo()" class="commercial-form">
+                  <!-- Fila: Nombre y Email -->
+                  <div class="form-row-2">
+                    <div class="form-field">
+                      <label class="field-label">Nombre Completo *</label>
+                      <input type="text"
+                             class="field-input"
+                             [(ngModel)]="form.nombre"
+                             name="nombre"
+                             placeholder="Ej. Juan Pérez"
+                             required>
                     </div>
-                    <div class="toolbar-separator"></div>
-                    <div class="toolbar-group">
-                      <button type="button" class="toolbar-btn toolbar-btn-sm" title="Título" (click)="execCmd('formatBlock', 'h3')">
-                        H
-                      </button>
-                      <button type="button" class="toolbar-btn toolbar-btn-sm" title="Subtítulo" (click)="execCmd('formatBlock', 'h4')">
-                        h
-                      </button>
-                      <button type="button" class="toolbar-btn toolbar-btn-sm" title="Párrafo" (click)="execCmd('formatBlock', 'p')">
-                        ¶
-                      </button>
-                    </div>
-                    <div class="toolbar-separator"></div>
-                    <div class="toolbar-group">
-                      <button type="button" class="toolbar-btn toolbar-btn-sm" title="Lista" (click)="execCmd('insertUnorderedList')">
-                        • ≡
-                      </button>
-                      <button type="button" class="toolbar-btn toolbar-btn-sm" title="Lista Numerada" (click)="execCmd('insertOrderedList')">
-                        1. ≡
-                      </button>
-                    </div>
-                    <div class="toolbar-separator"></div>
-                    <div class="toolbar-group">
-                      <input type="color" class="color-picker" value="#004aad" title="Color de Texto" (input)="execCmd('foreColor', $any($event.target).value)">
-                      <button type="button" class="toolbar-btn toolbar-btn-sm" title="Limpiar Formato" (click)="execCmd('removeFormat')">
-                        ✕
-                      </button>
+
+                    <div class="form-field">
+                      <label class="field-label">Correo Corporativo *</label>
+                      <input type="email"
+                             class="field-input"
+                             [(ngModel)]="form.email"
+                             name="email"
+                             placeholder="juan&#64;empresa.com"
+                             required>
                     </div>
                   </div>
-                  <div #editorArea
-                       class="editor-area"
-                       contenteditable="true"
-                       (input)="onEditorInput()"
-                       (paste)="onEditorPaste($event)"
-                       data-placeholder="Describa su desafío técnico con formato..."
-                  ></div>
-                </div>
-              </div>
 
-              <!-- Vista previa HTML estilo VS Code -->
-              <div *ngIf="formData.name && formData.email && formData.message" class="preview-toggle">
-                <button type="button" class="preview-btn" (click)="mostrarPreview = !mostrarPreview">
-                  {{ mostrarPreview ? '🔽 Ocultar' : '👁️ Vista previa' }} HTML
-                </button>
-              </div>
-              <div *ngIf="mostrarPreview && formData.name" class="code-preview">
-                <div class="code-titlebar">
-                  <span class="code-dot code-dot-red"></span>
-                  <span class="code-dot code-dot-yellow"></span>
-                  <span class="code-dot code-dot-green"></span>
-                  <span class="code-filename">email-preview.html</span>
-                </div>
-                <pre class="code-body"><code>{{ getPreviewHtml() }}</code></pre>
-              </div>
+                  <!-- Fila: Empresa y Servicio -->
+                  <div class="form-row-2">
+                    <div class="form-field">
+                      <label class="field-label">Empresa / Organización</label>
+                      <input type="text"
+                             class="field-input"
+                             [(ngModel)]="form.empresa"
+                             name="empresa"
+                             placeholder="Ej. TechCorp MX">
+                    </div>
 
-              <p *ngIf="emailError" class="msg-error">{{ emailError }}</p>
-              <p *ngIf="emailExito" class="msg-success">{{ emailExito }}</p>
+                    <div class="form-field">
+                      <label class="field-label">Servicio de Interés</label>
+                      <select class="field-input field-select" [(ngModel)]="form.servicio" name="servicio">
+                        <option value="Desarrollo de Software a Medida">Desarrollo de Software a Medida</option>
+                        <option value="Arquitectura Cloud & AWS">Arquitectura Cloud & AWS</option>
+                        <option value="Modernización de Sistemas Legacy">Modernización de Sistemas Legacy</option>
+                        <option value="DevSecOps & CI/CD">DevSecOps & CI/CD</option>
+                        <option value="Consultoría Técnica General">Consultoría Técnica General</option>
+                      </select>
+                    </div>
+                  </div>
 
-              <button type="submit" class="af-btn-primary submit-btn" [disabled]="enviando">
-                {{ enviando ? 'Enviando...' : 'Enviar Mensaje' }}
-              </button>
-            </form>
+                  <!-- Asunto -->
+                  <div class="form-field">
+                    <label class="field-label">Asunto del Mensaje *</label>
+                    <input type="text"
+                           class="field-input"
+                           [(ngModel)]="form.asunto"
+                           name="asunto"
+                           placeholder="Ej. Cotización para nueva plataforma web / Migración AWS"
+                           required>
+                  </div>
+
+                  <!-- Mensaje Amplio y Limpio -->
+                  <div class="form-field">
+                    <label class="field-label">Detalles del Proyecto o Reto Técnico *</label>
+                    <textarea class="field-textarea"
+                              [(ngModel)]="form.mensaje"
+                              name="mensaje"
+                              rows="5"
+                              placeholder="Describe brevemente el alcance de tu proyecto, tecnologías actuales, tiempos estimados o requerimientos clave..."
+                              required></textarea>
+                  </div>
+
+                  <!-- Alertas de Estado -->
+                  <div *ngIf="emailError" class="alert-box alert-error">
+                    <span>⚠️ {{ emailError }}</span>
+                  </div>
+
+                  <div *ngIf="emailExito" class="alert-box alert-success">
+                    <span>{{ emailExito }}</span>
+                  </div>
+
+                  <!-- Botón de Envío -->
+                  <button type="submit"
+                          class="af-btn-primary form-submit-btn"
+                          [disabled]="enviando">
+                    <span *ngIf="!enviando">Enviar Mensaje a Ingeniería</span>
+                    <span *ngIf="enviando">Enviando mensaje...</span>
+                    <svg *ngIf="!enviando" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <line x1="22" y1="2" x2="11" y2="13"></line>
+                      <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                  </button>
+
+                  <p class="form-privacy-note">
+                    🔒 Tu información es confidencial. Nunca compartimos tus datos con terceros.
+                  </p>
+                </form>
+              </div>
+            </div>
           </div>
-
         </div>
-      </div>
-    </section>
+      </section>
+    </main>
   `,
   styles: [`
     :host { display: block; }
-
-    .badge {
-      display: inline-block;
-      padding: 6px 16px;
-      border-radius: 100px;
-      background: rgba(0, 74, 173, 0.08);
-      color: #004aad;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 24px;
-    }
-
-    .contact-page {
-      min-height: 100vh;
-      padding: 80px 0 80px;
-      background: var(--af-bg-soft);
-    }
-
-    .contact-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 48px;
-      align-items: start;
-    }
-
-    .info-list {
-      display: flex;
-      flex-direction: column;
-      gap: 28px;
-    }
-
-    .info-item {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .info-icon {
-      font-size: 1.25rem;
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      background: rgba(0, 74, 173, 0.08);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .info-item h4 { font-size: 0.95rem; margin-bottom: 2px; }
-    .info-item .text-sub { font-size: 0.9rem; }
-
-    .form-card {
-      padding: 40px !important;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-    }
-
-    .form-body {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .submit-btn {
-      width: 100%;
-      margin-top: 4px;
-    }
-
-    /* Rich Text Editor */
-    .editor-container {
-      border: 1px solid var(--af-border);
-      border-radius: 12px;
-      overflow: hidden;
-      background: var(--af-bg-light);
-      transition: border-color 0.2s;
-    }
-    .editor-container:focus-within {
-      border-color: #004aad;
-    }
-    .editor-toolbar {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      padding: 8px 12px;
-      background: var(--af-bg-soft);
-      border-bottom: 1px solid var(--af-border);
-      flex-wrap: wrap;
-    }
-    .toolbar-group {
-      display: flex;
-      gap: 2px;
-    }
-    .toolbar-separator {
-      width: 1px;
-      height: 24px;
-      background: var(--af-border);
-      margin: 0 6px;
-    }
-    .toolbar-btn {
-      width: 32px;
-      height: 32px;
-      border: none;
-      border-radius: 6px;
-      background: transparent;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.85rem;
-      font-family: inherit;
-      color: var(--af-navy);
-      transition: background 0.15s;
-    }
-    .toolbar-btn:hover {
-      background: rgba(0, 74, 173, 0.08);
-    }
-    .toolbar-btn-sm { font-size: 0.75rem; }
-    .color-picker {
-      width: 28px;
-      height: 28px;
-      border: 1px solid var(--af-border);
-      border-radius: 6px;
-      padding: 2px;
-      cursor: pointer;
-      background: transparent;
-    }
-    .editor-area {
-      min-height: 140px;
-      max-height: 300px;
-      overflow-y: auto;
-      padding: 16px;
-      font-size: 0.9rem;
-      line-height: 1.6;
-      color: var(--af-navy);
-      outline: none;
-    }
-    .editor-area:empty::before {
-      content: attr(data-placeholder);
-      color: var(--af-slate);
-      pointer-events: none;
-    }
-    .editor-area h3 { font-size: 1.25rem; margin: 8px 0; }
-    .editor-area h4 { font-size: 1.1rem; margin: 6px 0; }
-    .editor-area ul, .editor-area ol { padding-left: 24px; margin: 8px 0; }
-    .editor-area li { margin-bottom: 4px; }
-
-    /* Code Preview (VS Code style) */
-    .preview-toggle { text-align: right; }
-    .preview-btn {
-      background: none;
-      border: 1px solid var(--af-border);
-      border-radius: 8px;
-      padding: 6px 14px;
-      font-size: 0.8rem;
-      color: var(--af-slate);
-      cursor: pointer;
-      font-family: inherit;
-    }
-    .preview-btn:hover { background: var(--af-bg-soft); }
-    .code-preview {
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid #2d2d3f;
-      background: #1e1e2e;
-    }
-    .code-titlebar {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 10px 14px;
-      background: #181825;
-      border-bottom: 1px solid #2d2d3f;
-    }
-    .code-dot {
-      width: 10px; height: 10px; border-radius: 50%;
-    }
-    .code-dot-red { background: #ff5f57; }
-    .code-dot-yellow { background: #febc2e; }
-    .code-dot-green { background: #28c840; }
-    .code-filename {
-      margin-left: 8px;
-      font-size: 0.7rem;
-      color: #6c7086;
-      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
-    }
-    .code-body {
-      padding: 16px;
-      margin: 0;
-      max-height: 280px;
-      overflow-y: auto;
-      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
-      font-size: 0.75rem;
-      line-height: 1.7;
-      color: #cdd6f4;
-      white-space: pre-wrap;
-      word-break: break-all;
-      tab-size: 2;
-    }
-    .code-body code {
-      color: #cdd6f4;
-    }
-
-    .msg-error {
-      color: #ef4444;
-      font-size: 0.85rem;
-      margin: 0;
-      padding: 8px 12px;
-      background: #fef2f2;
-      border-radius: 8px;
-    }
-
-    .msg-success {
-      color: #22c55e;
-      font-size: 0.85rem;
-      margin: 0;
-      padding: 8px 12px;
-      background: #f0fdf4;
-      border-radius: 8px;
-    }
-
-    @media (max-width: 768px) {
-      .contact-grid { grid-template-columns: 1fr; }
+    .contact-page-wrapper {
+      min-height: calc(100vh - 72px);
+      background-color: var(--bg-app);
     }
   `]
 })
-export class ContactComponent implements AfterViewInit {
+export class ContactComponent {
   emailService = inject(EmailService);
   private cdr = inject(ChangeDetectorRef);
   private ngZone = inject(NgZone);
 
-  @ViewChild('editorArea') editorAreaRef!: ElementRef<HTMLDivElement>;
-
-  formData = {
-    name: '',
+  form = {
+    nombre: '',
     email: '',
-    subject: '',
-    message: ''
+    empresa: '',
+    servicio: 'Desarrollo de Software a Medida',
+    asunto: '',
+    mensaje: ''
   };
 
   enviando = false;
   emailError = '';
   emailExito = '';
-  mostrarPreview = false;
-
-  ngAfterViewInit() { }
-
-  execCmd(command: string, value: string = '') {
-    document.execCommand(command, false, value);
-    this.editorAreaRef?.nativeElement.focus();
-  }
-
-  onEditorInput() {
-    this.formData.message = this.editorAreaRef?.nativeElement.innerHTML || '';
-  }
-
-  onEditorPaste(event: ClipboardEvent) {
-    event.preventDefault();
-    const text = event.clipboardData?.getData('text/plain') || '';
-    document.execCommand('insertText', false, text);
-  }
-
-  getPreviewHtml(): string {
-    return this.emailService.buildHtmlMessage(
-      this.formData.name,
-      this.formData.email,
-      this.formData.subject || 'Sin asunto',
-      this.formData.message
-    );
-  }
 
   enviarCorreo() {
     this.emailError = '';
     this.emailExito = '';
 
-    this.onEditorInput();
-
-    const plainText = this.editorAreaRef?.nativeElement.innerText?.trim() || '';
-    if (!this.formData.name.trim() || !this.formData.email.trim() || !plainText) {
-      this.emailError = 'Por favor completa todos los campos requeridos.';
+    if (!this.form.nombre.trim() || !this.form.email.trim() || !this.form.mensaje.trim()) {
+      this.emailError = 'Por favor completa todos los campos requeridos (*).';
       return;
     }
 
-    if (!this.emailService.isValidEmail(this.formData.email)) {
+    if (!this.emailService.isValidEmail(this.form.email)) {
       this.emailError = 'Por favor ingresa un correo electrónico válido.';
       return;
     }
 
     this.enviando = true;
 
+    // Construir contenido enriquecido para el correo
+    const contenidoCompleto = `
+      <p><strong>Servicio de interés:</strong> ${this.form.servicio}</p>
+      ${this.form.empresa ? `<p><strong>Empresa:</strong> ${this.form.empresa}</p>` : ''}
+      <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 16px 0;" />
+      <p style="white-space: pre-wrap;">${this.form.mensaje.replace(/\n/g, '<br/>')}</p>
+    `;
+
+    const asuntoFinal = this.form.asunto.trim()
+      ? `[${this.form.servicio}] ${this.form.asunto}`
+      : `Nuevo contacto web - ${this.form.servicio}`;
+
     const htmlMessage = this.emailService.buildHtmlMessage(
-      this.formData.name,
-      this.formData.email,
-      this.formData.subject || 'Contacto desde neamsoft.com.mx',
-      this.formData.message
+      this.form.nombre,
+      this.form.email,
+      asuntoFinal,
+      contenidoCompleto
     );
 
     this.emailService.sendMail({
@@ -454,21 +230,25 @@ export class ContactComponent implements AfterViewInit {
     }).subscribe({
       next: () => {
         this.ngZone.run(() => {
-          this.emailExito = '✅ Mensaje enviado. Nos pondremos en contacto pronto.';
-          this.formData = { name: '', email: '', subject: '', message: '' };
-          if (this.editorAreaRef) {
-            this.editorAreaRef.nativeElement.innerHTML = '';
-          }
+          this.emailExito = '✅ Mensaje recibido con éxito. Nos pondremos en contacto contigo en menos de 24 horas.';
+          this.form = {
+            nombre: '',
+            email: '',
+            empresa: '',
+            servicio: 'Desarrollo de Software a Medida',
+            asunto: '',
+            mensaje: ''
+          };
           this.enviando = false;
-          this.mostrarPreview = false;
           this.cdr.detectChanges();
         });
       },
-      error: () => {
+      error: (err) => {
         this.ngZone.run(() => {
-          this.emailError = '❌ Error al enviar. Intenta nuevamente.';
+          this.emailError = 'No se pudo enviar el mensaje automáticamente. Por favor escríbenos directamente a contacto@neamsoft.com.mx';
           this.enviando = false;
           this.cdr.detectChanges();
+          console.error('Error enviando correo:', err);
         });
       }
     });

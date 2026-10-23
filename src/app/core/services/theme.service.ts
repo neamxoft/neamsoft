@@ -34,6 +34,7 @@ export class ThemeService {
         if (savedTheme) {
             return savedTheme === 'dark';
         }
-        return window.matchMedia('(prefers-color-scheme: dark)').matches;
+        // Por defecto activar el Black Theme
+        return true;
     }
 }
